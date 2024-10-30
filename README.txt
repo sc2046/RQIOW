@@ -1,3 +1,5 @@
+On my device (RTX 3070) this renders the final scene from the book onto an 800x600 image in ~1.2s, using 1000 samples with a depth of 32.
+
 
 Some Notes:
 - The acceleration structure setup consists of a BLAS representing a single AABB. Each sphere in the scene 
@@ -6,7 +8,7 @@ is represented as an instance in the TLAS.
 then it would also have to be specified even for non-dielectric materials.
 
 
-
+Some helpful resources:
 - https://raytracing.github.io/
 - https://nvpro-samples.github.io/vk_mini_path_tracer/
 - https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/

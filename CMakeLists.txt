@@ -47,8 +47,8 @@ add_subdirectory("src")
 set(GLSLANG_VALIDATOR_PATH "$ENV{VULKAN_SDK}/Bin/glslangvalidator")
 
 # Use the specified path in the find_program call
-#find_program(GLSLANG_VALIDATOR NAMES glslangValidator PATHS ${GLSLANG_VALIDATOR_PATH})
-find_program(GLSL_VALIDATOR glslangValidator HINTS $ENV{VULKAN_SDK}/Bin/ $ENV{VULKAN_SDK}/Bin32/)
+find_program(GLSLANG_VALIDATOR NAMES glslangValidator PATHS ${GLSLANG_VALIDATOR_PATH})
+#find_program(GLSL_VALIDATOR glslangValidator HINTS $ENV{VULKAN_SDK}/Bin/ $ENV{VULKAN_SDK}/Bin32/)
 
 if (NOT GLSLANG_VALIDATOR)
     message(FATAL_ERROR "glslangValidator not found! Please ensure it is installed and available in the system PATH.")
