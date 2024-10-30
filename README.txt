@@ -1,5 +1,5 @@
 On my device (RTX 3070) this renders the final scene from the book onto an 800x600 image in ~1.2s, using 1000 samples with a depth of 32.
-![Scene](scenes/scene.jpg)
+![Scene](https://github.com/sc2046/RQIOW/blob/main/scenes/scene.jpg)
 
 
 
