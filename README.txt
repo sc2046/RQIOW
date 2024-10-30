@@ -1,7 +1,10 @@
 On my device (RTX 3070) this renders the final scene from the book onto an 800x600 image in ~1.2s, using 1000 samples with a depth of 32.
+![Scene](./scenes/scene.jpg)
+
 
 
 Some Notes:
+- The work is all done in a compute shader.
 - The acceleration structure setup consists of a BLAS representing a single AABB. Each sphere in the scene 
 is represented as an instance in the TLAS.
 - All refractive materials have an ior of 1.5 just to make the material API easier. An ior member could be added to the sphere structure,
