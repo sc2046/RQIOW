@@ -12,18 +12,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-#include <cstdlib>
-
 #include <iostream>
-
-inline float random_double() {
-    // Returns a random real in [0,1).
-    return std::rand() / (RAND_MAX + 1.0);
-}
-
-inline glm::vec3 random_vector() {
-    return vec3(random_double(), random_double(), random_double());
-}
 
 void VulkanApp::initContext(bool validation)
 {
@@ -142,113 +131,13 @@ void VulkanApp::initAllocators()
     mDeletionQueue.push_function([&]() { vkDestroyCommandPool(mDevice, mCommandPool, nullptr);});
 }
 
-VulkanApp::Scene createBook1Ch9Scene()
-{
-    VulkanApp::Scene scene;
-
-    scene.mCamera = {
-        .center = glm::vec3(0.f),
-        .eye = glm::vec3(0.f,0.f,-1.f),
-        .backgroundColor = glm::vec3(1.f),
-        .fovY = 90.f,
-        .focalDistance = 1.f
-    };
-
-    scene.mSpheres.emplace_back(glm::vec3(0.f, 0.f, -1.f), 0.5f, DIFFUSE, glm::vec3(0.5f));
-    scene.mSpheres.emplace_back(glm::vec3(0.f, -100.5f, -1.f), 100.f, DIFFUSE, glm::vec3(0.5f));
-    return scene;
-}
-
-VulkanApp::Scene createBook1Ch10Scene()
-{
-    VulkanApp::Scene scene;
-
-    scene.mCamera = {
-        .center = glm::vec3(0.f),
-        .eye = glm::vec3(0.f,0.f,-1.f),
-        .backgroundColor = glm::vec3(1.f),
-        .fovY = 90.f,
-        .focalDistance = 1.f
-    };
-
-   scene.mSpheres.emplace_back(glm::vec3(0.0, -100.5, -1.0), 100.0, DIFFUSE, glm::vec3(0.8f,0.8f,0.f));
-   scene.mSpheres.emplace_back(glm::vec3(0.0, 0.0, -1.2), 0.5, DIFFUSE, glm::vec3(0.1f, 0.2f, 0.5f));
-   scene.mSpheres.emplace_back(glm::vec3(-1.0, 0.0, -1.0), 0.5, METAL, glm::vec3(0.8f));
-   scene.mSpheres.emplace_back(glm::vec3(1.0, 0.0, -1.0), 0.5, METAL, glm::vec3(0.8f,0.6f,0.2f));
-    return scene;
-}
-
-VulkanApp::Scene createBook1Ch11Scene()
-{
-    VulkanApp::Scene scene;
-
-    scene.mCamera = {
-        .center = glm::vec3(0.f),
-        .eye = glm::vec3(0.f,0.f,-1.f),
-        .backgroundColor = glm::vec3(1.f),
-        .fovY = 90.f,
-        .focalDistance = 1.f
-    };
-
-    scene.mSpheres.emplace_back(glm::vec3(0.0, -100.5, -1.0), 100.0, DIFFUSE, glm::vec3(0.8f, 0.8f, 0.f));
-    scene.mSpheres.emplace_back(glm::vec3(0.0, 0.0, -1.2), 0.5, DIFFUSE, glm::vec3(0.1f, 0.2f, 0.5f));
-    scene.mSpheres.emplace_back(glm::vec3(-1.0, 0.0, -1.0), 0.5, DIELECTRIC, glm::vec3(1.f)); // note ior is fixed at 1.5 in shader.
-    scene.mSpheres.emplace_back(glm::vec3(1.0, 0.0, -1.0), 0.5, METAL, glm::vec3(0.8f, 0.6f, 0.2f));
-    return scene;
-}
-
-VulkanApp::Scene createBook1Ch14Scene()
-{
-    VulkanApp::Scene scene;
-
-    scene.mCamera = {
-        .center = glm::vec3(13.f, 2.f, 3.f),
-        .eye = glm::vec3(0.f,0.f,0.f),
-        .backgroundColor = glm::vec3(1.f),
-        .fovY = 20.f,
-        .focalDistance = 1.f
-    };
-
-    // Ground
-    scene.mSpheres.emplace_back(glm::vec3(0, -1000, 0), 1000.f, DIFFUSE, glm::vec3(0.5f));
-
-    for (int a = -11; a < 11; a++) {
-        for (int b = -11; b < 11; b++) {
-            const auto choose_mat = random_double();
-
-            glm::vec3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
-
-            if (glm::length(center - glm::vec3(4, 0.2, 0)) > 0.9) {
-
-                if (choose_mat < 0.8) {
-                    auto albedo = random_vector();
-                    scene.mSpheres.emplace_back(center, 0.2f, DIFFUSE, albedo);
-                }
-                else if (choose_mat < 0.95) {
-                    auto albedo = random_vector();
-                    scene.mSpheres.emplace_back(center, 0.2f, METAL, albedo);
-                }
-                else {
-                    scene.mSpheres.emplace_back(center, 0.2f, DIELECTRIC, glm::vec3(1.f));
-                }
-            }
-        }
-    }
-    scene.mSpheres.emplace_back(glm::vec3(0, 1, 0), 1.f, DIELECTRIC, glm::vec3(1.f));
-    scene.mSpheres.emplace_back(glm::vec3(-4, 1, 0), 1.f, DIFFUSE, glm::vec3(0.4f, 0.2f, 0.1f));
-    scene.mSpheres.emplace_back(glm::vec3(4, 1, 0), 1.f, METAL, glm::vec3(0.7, 0.6, 0.5));
-
-    return scene;
-}
-
-
 
 // Uploads all scene geometry into GPU buffers;
 void VulkanApp::uploadScene()
 {
-    mScene = createBook1Ch14Scene();
 
-    VulkanApp::Buffer sphereStagingBuffer;
+
+    Buffer sphereStagingBuffer;
     sphereStagingBuffer.mByteSize = mScene.mSpheres.size() * sizeof(Sphere);
 
     const VkBufferCreateInfo stagingbufferCreateInfo{
@@ -306,7 +195,7 @@ void VulkanApp::initAabbBlas()
             .max = glm::vec3(1.f),
         };
 
-        VulkanApp::Buffer stagingBuffer;
+        Buffer stagingBuffer;
         stagingBuffer.mByteSize = sizeof(AABB);
 
         VkBufferCreateInfo stagingbufferCreateInfo{
@@ -406,7 +295,7 @@ void VulkanApp::initAabbBlas()
 
 
     // Allocate a GPU scratch buffer holding the temporary data of the acceleration structure builder.
-    VulkanApp::Buffer   scratchBuffer;
+    Buffer   scratchBuffer;
     {
         const VkBufferCreateInfo scratchBufCreateInfo{
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -533,7 +422,7 @@ void VulkanApp::initSceneTLAS()
     }
 
     // Create scratch buffer for the tlas.
-    VulkanApp::Buffer   scratchBuffer;
+    Buffer   scratchBuffer;
     const VkBufferCreateInfo scratchBufCreateInfo{
         .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
         .size = buildSizesInfo.buildScratchSize ,

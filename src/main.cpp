@@ -31,6 +31,7 @@ int main()
 
         {
             auto begin = std::chrono::high_resolution_clock::now();
+            engine.setScene(createBook1Ch14Scene());
             engine.uploadScene();
             auto end = std::chrono::high_resolution_clock::now();
             sceneInitTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();

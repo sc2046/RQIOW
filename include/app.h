@@ -1,5 +1,6 @@
 #pragma once
 
+#include "scene.h"
 #include "vk_helpers.h"
 #include "vk_types.h"
 #include "vk_mem_alloc.h"
@@ -8,28 +9,6 @@
 
 class VulkanApp {
 public:
-
-	struct Buffer
-	{
-		VkBuffer		mBuffer;
-		VmaAllocation	mAllocation;
-		uint32_t		mByteSize;
-	};
-
-	struct AccelerationStructure
-	{
-		VkAccelerationStructureKHR	mHandle;
-		Buffer						mData; // Stores the Acceleration structure data.
-	};
-
-	struct Scene
-	{
-		Camera				mCamera;
-
-		std::vector<Sphere> mSpheres;
-		Buffer				mSphereBuffer;
-	};
-
 
 	bool bUseValidationLayers;
 	VkExtent2D mWindowExtents{ RESOLUTION_WIDTH, RESOLUTION_HEIGHT};
@@ -42,6 +21,7 @@ public:
 	void initAllocators();
 	void initImage();
 
+	void setScene(const Scene& scene) { mScene = scene; }
 	void uploadScene();
 
 	void initAabbBlas();
